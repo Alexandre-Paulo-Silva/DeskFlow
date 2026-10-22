@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Cabeçalho do painel de chamados com título e descrição -->
+    <div>
+        <h1 class="text-2xl font-bold text-white mb-1">Painel de Chamados</h1>
+        <p class="text-slate-400 text-sm">Gerencie e acompanhe todos os tickets em tempo real.</p>
+    </div>
+
+    <!-- Cards de Métricas e Indicadores Quantitativos -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Card: Total de chamados -->
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
+            <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total</span>
+            <div class="text-3xl font-bold text-white mt-2">{{ metrics.total }}</div>
+        </div>
+        <!-- Card: Chamados Abertos -->
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
+            <span class="text-amber-400 text-xs font-semibold uppercase tracking-wider">Abertos</span>
+            <div class="text-3xl font-bold text-amber-400 mt-2">{{ metrics.abertos }}</div>
+        </div>
+        <!-- Card: Chamados Em Andamento -->
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
+            <span class="text-blue-400 text-xs font-semibold uppercase tracking-wider">Em Andamento</span>
+            <div class="text-3xl font-bold text-blue-400 mt-2">{{ metrics.em_andamento }}</div>
+        </div>
+        <!-- Card: Chamados Resolvidos -->
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
+            <span class="text-emerald-400 text-xs font-semibold uppercase tracking-wider">Resolvidos</span>
+            <div class="text-3xl font-bold text-emerald-400 mt-2">{{ metrics.resolvidos }}</div>
+        </div>
+    </div>
+
+    <!-- Barra de Filtros Dinâmicos por Status e Categoria -->
+    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700/50 flex flex-wrap gap-4 items-center justify-between">
+        <form method="GET" class="flex flex-wrap gap-3 w-full md:w-auto">
+            <!-- Filtro por Status (submete o formulário automaticamente ao alterar a seleção) -->
+            <select name="status" onchange="this.form.submit()" class="bg-slate-900 border border-slate-700 text-slate-300 text-sm rounded-lg p-2.5">
+                <option value="">Todos os Status</option>
+                <option value="ABERTO" {% if selected_status == 'ABERTO' %}selected{% endif %}>Aberto</option>
+                <option value="EM_ANDAMENTO" {% if selected_status == 'EM_ANDAMENTO' %}selected{% endif %}>Em Andamento</option>
+                <option value="RESOLVIDO" {% if selected_status == 'RESOLVIDO' %}selected{% endif %}>Resolvido</option>
+                <option value="FECHADO" {% if selected_status == 'FECHADO' %}selected{% endif %}>Fechado</option>
+            </select>
+
+            <!-- Filtro por Categoria (submete o formulário automaticamente) -->
+            <select name="categoria" onchange="this.form.submit()" class="bg-slate-900 border border-slate-700 text-slate-300 text-sm rounded-lg p-2.5">
+                <option value="">Todas as Categorias</option>
+                <option value="TI" {% if selected_categoria == 'TI' %}selected{% endif %}>T.I.</option>
+                <option value="FINANCEIRO" {% if selected_categoria == 'FINANCEIRO' %}selected{% endif %}>Financeiro</option>
+                <option value="RH" {% if selected_categoria == 'RH' %}selected{% endif %}>Recursos Humanos</option>
+                <option value="INFRA" {% if selected_categoria == 'INFRA' %}selected{% endif %}>Infraestrutura</option>
+            </select>
+        </form>
+        
+        <!-- Botão para limpar os filtros aplicados (exibido apenas se houver filtro ativo) -->
+        {% if selected_status or selected_categoria %}
+            <a href="{% url 'ticket_list' %}" class="text-xs text-indigo-400 hover:underline">Limpar Filtros</a>
+        {% endif %}
+    </div>
+
+    <!-- Tabela de Listagem de Chamados -->
+    <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-300">
+                <!-- Cabeçalho da tabela -->
+                <thead class="bg-slate-900/60 uppercase text-xs text-slate-400 border-b border-slate-700/50">
+                    <tr>
+                        <th class="px-6 py-4">Título / Solicitante</th>
+                        <th class="px-6 py-4">Categoria</th>
+                        <th class="px-6 py-4">Prioridade</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Data</th>
+                        <th class="px-6 py-4 text-right">Ação</th>
+                    </tr>
+                </thead>
+                <!-- Corpo da tabela com loop dinâmico de tickets -->
+                <tbody class="divide-y divide-slate-700/40">
+                    {% for ticket in tickets %}
+                    <tr class="hover:bg-slate-800/80 transition">
+                        <!-- Coluna: Título e Solicitante -->
+                        <td class="px-6 py-4">
+                            <div class="font-semibold text-white">{{ ticket.titulo }}</div>
+                            <div class="text-xs text-slate-400">{{ ticket.solicitante }}</div>
+                        </td>
+                        <!-- Coluna: Categoria formatada -->
+                        <td class="px-6 py-4">
+                            <span class="bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md text-xs font-medium">
+                                {{ ticket.get_categoria_display }}
+                            </span>
+                        </td>
+                        <!-- Coluna: Prioridade com cores dinâmicas condicionais -->
+                        <td class="px-6 py-4">
+                            {% if ticket.prioridade == 'CRITICA' %}
+                                <span class="text-red-400 bg-red-400/10 border border-red-400/20 px-2.5 py-1 rounded-md text-xs font-bold">Crítica</span>
+                            {% elif ticket.prioridade == 'ALTA' %}
+                                <span class="text-orange-400 bg-orange-400/10 border border-orange-400/20 px-2.5 py-1 rounded-md text-xs font-semibold">Alta</span>
+                            {% elif ticket.prioridade == 'MEDIA' %}
+                                <span class="text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-2.5 py-1 rounded-md text-xs">Média</span>
+                            {% else %}
+                                <span class="text-slate-400 bg-slate-700/40 px-2.5 py-1 rounded-md text-xs">Baixa</span>
+                            {% endif %}
+                        </td>
+                        <!-- Coluna: Status com badges coloridos e animações sutis -->
+                        <td class="px-6 py-4">
+                            {% if ticket.status == 'ABERTO' %}
+                                <span class="inline-flex items-center gap-1.5 text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-full text-xs font-medium border border-amber-400/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Aberto
+                                </span>
+                            {% elif ticket.status == 'EM_ANDAMENTO' %}
+                                <span class="inline-flex items-center gap-1.5 text-blue-400 bg-blue-400/10 px-2.5 py-1 rounded-full text-xs font-medium border border-blue-400/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span> Em Andamento
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1.5 text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-full text-xs font-medium border border-emerald-400/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> {{ ticket.get_status_display }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <!-- Coluna: Data de criação formatada -->
+                        <td class="px-6 py-4 text-xs text-slate-400">
+                            {{ ticket.criado_em|date:"d/m/Y H:i" }}
+                        </td>
+                        <!-- Coluna: Ação de redirecionamento para detalhes do ticket -->
+                        <td class="px-6 py-4 text-right">
+                            <a href="{% url 'ticket_detail' ticket.id %}" class="text-indigo-400 hover:text-indigo-300 font-medium text-xs">
+                                Ver Detalhes &rarr;
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <!-- Estado vazio caso nenhum chamado seja encontrado -->
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-slate-500">
+                            Nenhum chamado encontrado.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+    <!-- Link para voltar à página inicial / listagem de chamados -->
+    <div>
+        <a href="{% url 'ticket_list' %}" class="text-xs text-indigo-400 hover:underline">&larr; Voltar para a página inicial</a>
+    </div>
+
+    <!-- Título e descrição da página de perfil -->
+    <div>
+        <h1 class="text-2xl font-bold text-white">Meu Perfil</h1>
+        <p class="text-xs text-slate-400 mt-1">Gerencie suas informações de acesso e segurança da conta.</p>
+    </div>
+
+    <!-- Alertas de Feedback de Erro -->
+    {% if error %}
+    <div class="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-4 rounded-xl">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- Alertas de Feedback de Sucesso -->
+    {% if success %}
+    <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs p-4 rounded-xl">
+        {{ success }}
+    </div>
+    {% endif %}
+
+    <div class="bg-slate-800/50 border border-slate-700/50 p-6 rounded-2xl space-y-6 shadow-xl">
+        <!-- Informações Básicas (Campos somente leitura para Nome de Usuário e Tipo de Conta) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Nome de Usuário</label>
+                <input type="text" disabled value="{{ user.username }}" 
+                       class="w-full bg-slate-900/50 border border-slate-800 rounded-lg p-3 text-sm text-slate-400 cursor-not-allowed">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Tipo de Conta</label>
+                <input type="text" disabled value="{% if user.is_staff %}Técnico / Suporte{% else %}Cliente{% endif %}" 
+                       class="w-full bg-slate-900/50 border border-slate-800 rounded-lg p-3 text-sm text-slate-400 cursor-not-allowed">
+            </div>
+        </div>
+
+        <!-- Formulário de Atualização de E-mail e Senha -->
+        <form method="POST" class="space-y-4 pt-4 border-t border-slate-700/50">
+            {% csrf_token %}
+            <!-- Campo de edição de e-mail -->
+            <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">E-mail</label>
+                <input type="email" name="email" value="{{ user.email }}" required
+                       class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <!-- Seção de alteração opcional de senha -->
+            <div class="pt-4 border-t border-slate-700/50">
+                <h3 class="text-sm font-bold text-white mb-3">Alterar Senha <span class="text-xs font-normal text-slate-500">(Opcional)</span></h3>
+                <div class="space-y-4">
+                    <!-- Campo de senha atual para validação -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Senha Atual</label>
+                        <input type="password" name="senha_atual" placeholder="Digite sua senha atual para alterar"
+                               class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <!-- Campo de nova senha -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Nova Senha</label>
+                        <input type="password" name="nova_senha" placeholder="Digite a nova senha"
+                               class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão de salvamento das alterações -->
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-lg text-sm transition">
+                    Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
