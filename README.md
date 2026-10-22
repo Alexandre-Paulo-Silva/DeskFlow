@@ -1,16 +1,16 @@
-# 🚀 DeskFlow — Enterprise Helpdesk & Ticketing System
+#  DeskFlow — Enterprise Helpdesk & Ticketing System
 
 > Um sistema de helpdesk e gerenciamento de chamados corporativos moderno, seguro e de alta performance, desenvolvido com arquitetura de banco de dados híbrida e design system profissional.
 
 ---
 
-## 📋 Sobre o Projeto
+## Sobre o Projeto
 
 O **DeskFlow** é uma aplicação web full-stack projetada para otimizar o fluxo de suporte técnico e atendimento em ambientes corporativos. O sistema conta com controle de acesso baseado em papéis (RBAC), painel administrativo completo, anexo de arquivos, sistema de comentários dinâmicos e geração automatizada de relatórios executivos em PDF.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 Este projeto foi construído utilizando um conjunto robusto de ferramentas modernas de mercado:
 
@@ -23,25 +23,25 @@ Este projeto foi construído utilizando um conjunto robusto de ferramentas moder
 
 ---
 
-## ✨ Principais Funcionalidades
+##  Principais Funcionalidades
 
-### 🔐 1. Autenticação e Controle de Acesso (RBAC)
+###  1. Autenticação e Controle de Acesso (RBAC)
 * **Cliente / Solicitante:** Abre chamados, acompanha o status em tempo real, interage via comentários e envia anexos.
 * **Técnico / Staff:** Assume chamados, atualiza o andamento do suporte e gerencia o ciclo de vida dos tickets.
 * **Administrador (Superuser):** Possui acesso total ao painel administrativo (`/dashboard/`), podendo monitorar métricas globais, excluir tickets corrompidos ou gerenciar usuários cadastrados.
 
-### 🎫 2. Gestão Completa de Chamados
+###  2. Gestão Completa de Chamados
 * Abertura de tickets categorizados (T.I., Financeiro, RH, Infraestrutura, etc.) com níveis de prioridade (Baixa, Média, Alta, Crítica).
 * Sistema de histórico de comentários em tempo real acoplado diretamente aos documentos do MongoDB.
 * Suporte a upload de arquivos e imagens para evidências de problemas.
 
-### 📊 3. Relatórios Gerenciais em PDF
+###  3. Relatórios Gerenciais em PDF
 * Central exclusiva para administradores filtrarem chamados por *Status* e *Categoria*.
 * Geração instantânea de relatórios corporativos em PDF formatados profissionalmente com paginação dinâmica, cabeçalhos estilizados e efeito zebrado nas tabelas via **ReportLab**.
 
 ---
 
-## ⚙️ Como Executar o Projeto Localmente
+##  Como Executar o Projeto Localmente
 
 Siga os passos abaixo para configurar e rodar o projeto na sua máquina:
 
