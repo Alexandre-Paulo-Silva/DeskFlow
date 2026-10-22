@@ -52,7 +52,7 @@ Siga os passos abaixo para configurar e rodar o projeto na sua máquina:
 ### 2. Clonar o repositório e configurar o ambiente virtual
 ```bash
 # Clone o repositório
-git clone [https://github.com/seu-usuario/deskflow.git](https://github.com/seu-usuario/deskflow.git)
+git clone [https://github.com/Alexandre-Paulo-Silva/DeskFlow.git](https://github.com/Alexandre-Paulo-Silva/DeskFlow.git)
 cd deskflow
 
 # Crie e ative o ambiente virtual
