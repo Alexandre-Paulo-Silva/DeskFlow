@@ -61,3 +61,11 @@ python -m venv venv
 venv\Scripts\activate
 # No Linux/Mac:
 source venv/bin/activate
+
+#dependencias
+pip install -r requirements.txt
+django>=4.2,<5.0
+mongoengine>=0.28.0
+reportlab>=4.0.0
+pymongo>=4.6.0
+
